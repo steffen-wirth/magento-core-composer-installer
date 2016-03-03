@@ -26,7 +26,7 @@ class CoreManager implements PluginInterface, EventSubscriberInterface
      *
      * @var string
      */
-    protected $type = 'magento-core';
+    protected $type = array('magento-core','magento-source');
 
     /**
      * @var Composer
@@ -128,7 +128,7 @@ class CoreManager implements PluginInterface, EventSubscriberInterface
     {
         $installedCorePackages = array();
         foreach ($event->getInstalledRepo()->getPackages() as $package) {
-            if ($package->getType() === $this->type) {
+            if (in_array( $package->getType(), $this->type )) {
                 $installedCorePackages[$package->getName()] = $package;
             }
         }
@@ -139,7 +139,7 @@ class CoreManager implements PluginInterface, EventSubscriberInterface
 
         foreach ($operations as $operation) {
             $p = $operation->getPackage();
-            if ($p->getType() === $this->type) {
+            if (in_array( $p->getType(), $this->type )) {
                 switch ($operation->getJobType()) {
                     case "uninstall":
                         unset($installedCorePackages[$p->getName()]);
@@ -171,7 +171,7 @@ class CoreManager implements PluginInterface, EventSubscriberInterface
                 break;
         }
 
-        if ($package->getType() === $this->type) {
+        if (in_array( $package->getType(), $this->type )) {
             $options = new Options($this->composer->getPackage()->getExtra());
             $this->ensureRootDirExists($options);
 
@@ -204,7 +204,7 @@ class CoreManager implements PluginInterface, EventSubscriberInterface
                 break;
         }
 
-        if ($package->getType() === $this->type) {
+        if (in_array( $package->getType(), $this->type )) {
 
             $options = new Options($this->composer->getPackage()->getExtra());
 
